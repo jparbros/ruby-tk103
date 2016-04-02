@@ -56,14 +56,19 @@ loop do
   Thread.start(server.accept) do |client|
     puts "A client connected"
 
+    message = ""
     loop do
-      message = client.gets
-      message = message.split(',')
+      byte = client.recv(1)
+      message += byte
 
-      if message.first == '##'
-        client.puts "LOAD"
-      elsif message.first.to_i > 0 && message.first.size == 15
-        client.puts "ON"
+      if byte == ";"
+        commands = message.split(',')
+
+        if commands.first == '##'
+          client.puts "LOAD"
+        elsif commands.first.to_i > 0 && commands.first.size == 15
+          client.puts "ON"
+        end
       end
     end
 
