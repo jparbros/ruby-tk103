@@ -1,5 +1,5 @@
 global: &global
-  adapter: mysql2
+  adapter: postgresql
   pool: 5
   timeout: 5000
   encoding: utf8
@@ -7,5 +7,5 @@ global: &global
 development:
   host: localhost
   database: gps_frankevers_nl_development
-  username: root
+  username: jparbros
   <<: *global

@@ -1,3 +1,4 @@
+require 'pry'
 require 'socket'
 require 'active_record'
 require_relative 'models/position'
@@ -49,20 +50,20 @@ def parse(message)
 end
 
 puts "GPS server listening on port 12345"
-server = TCPServer.open 12345
+server = TCPServer.open 80
 
 loop do
   Thread.start(server.accept) do |client|
     puts "A client connected"
 
-    message = ""
     loop do
-      byte = client.recv(1)
-      message += byte
+      message = client.gets
+      message = message.split(',')
 
-      if byte == ")"
-        parse(message)
-        message = ""
+      if message.first == '##'
+        client.puts "LOAD"
+      elsif message.first.to_i > 0 && message.first.size == 15
+        client.puts "ON"
       end
     end
 
