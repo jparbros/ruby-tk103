@@ -50,7 +50,7 @@ def parse(message)
 end
 
 puts "GPS server listening on port 12345"
-server = TCPServer.open 80
+server = TCPServer.open 3000
 
 loop do
   Thread.start(server.accept) do |client|
@@ -65,8 +65,12 @@ loop do
         commands = message.split(',')
 
         if commands.first == '##'
-          client.puts "LOAD"
-        elsif commands.first.to_i > 0 && commands.first.size == 15
+          if commands.last.size > 2
+            client.puts "LOAD"
+          else
+            client.puts "ON"
+          end
+        elsif commands.last[0] > 'A' && commands.first.size == 15
           client.puts "ON"
         end
       end
